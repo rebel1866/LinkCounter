@@ -57,7 +57,7 @@
             </p:column>
 
             <p:column headerText="Адрес ссылки">
-                <p:commandLink action="#{linkController.update(link.href)}" update=":form:panel">
+                <p:commandLink action="#{linkController.updateHref(link.href)}" update=":form:panel">
                     <h:outputText value="#{link.href}"/>
                 </p:commandLink>
             </p:column>

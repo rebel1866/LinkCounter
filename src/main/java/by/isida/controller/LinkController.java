@@ -6,8 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -37,16 +37,28 @@ public class LinkController implements Serializable {
         if (links.size() > 0) {
             links.clear();
         }
-//        String normalizedLink = normalizeLink();
+        normalizeLink();
         Document document;
         try {
             document = Jsoup.connect(linkHref).get();
         } catch (IOException | IllegalArgumentException e) {
             Logger logger = LogManager.getLogger(LinkController.class);
-            String errorMessage = String.format("Невозможно подключиться к указанному URL-адресу: %s", linkHref);
+            String errorMessage = String.format("Невозможно подключиться по указанному URL-адресу: %s", linkHref);
             logger.error(errorMessage);
             throw new LinkControllerException(errorMessage);
         }
+        fillLinkList(document, links);
+    }
+
+    public void clear() {
+        links.clear();
+    }
+
+    public void updateHref(String newHref) {
+        linkHref = newHref;
+    }
+
+    private void fillLinkList(Document document, List<Link> links) {
         Elements elements = document.getElementsByTag("a");
         for (Element linkElement : elements) {
             String linkHref = linkElement.attr("href");
@@ -57,19 +69,10 @@ public class LinkController implements Serializable {
         }
     }
 
-    //   private String normalizeLink() {
-//        if (!linkHref.startsWith("http://") || !linkHref.startsWith("https://")) {
-//            return "http://" + linkHref;
-//        }
-//        return linkHref + "";
-    // }
-
-    public void clear() {
-        links.clear();
-    }
-
-    public void update(String newHref) {
-        linkHref = newHref;
+    private void normalizeLink() {
+        if (!linkHref.startsWith("http")) {
+            linkHref = "http://" + linkHref;
+        }
     }
 
     private boolean isValidLink(String linkHref, String linkName) {
