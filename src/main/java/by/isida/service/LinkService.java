@@ -1,6 +1,7 @@
 package by.isida.service;
 
 import by.isida.model.Link;
+import by.isida.service.exception.LinkServiceException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,16 +33,18 @@ public class LinkService implements Serializable {
     private String linkHref;
     private List<Link> links = new ArrayList<>();
 
-    public List<Link> analyze() {
+    public List<Link> analyze() throws LinkServiceException {
         if (links.size() > 0) {
             links.clear();
         }
-        Document document = new Document("");
+        Document document;
         try {
             document = Jsoup.connect(linkHref).get();
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
             Logger logger = LogManager.getLogger(LinkService.class);
-            logger.error("Can not connect to given url");
+            String errorMessage = String.format("Невозможно подключиться к указанному URL-адресу: %s", linkHref);
+            logger.error(errorMessage);
+            throw new LinkServiceException(errorMessage);
         }
         Elements elements = document.getElementsByTag("a");
         for (Element linkElement : elements) {

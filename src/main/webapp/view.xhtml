@@ -20,37 +20,48 @@
         <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false"
                   showHeader="false">
             <div class="text-center">
-                <i class="pi pi-spin pi-spinner loading-icon"> </i>
-                <h:outputText value="Идет обработка...."/>
+                <div id="load"><i class="pi pi-spin pi-spinner loading-icon"> </i>&nbsp;
+                    <h:outputText value="Идет обработка...."/>
+                </div>
             </div>
         </p:dialog>
 
-        <div id="buttons"><p:commandButton value="Анализировать" update=":data:display" action="#{linkService.analyze()}"
+        <div id="buttons"><p:commandButton value="Анализировать" update=":data:display"
+                                           action="#{linkService.analyze()}"
                                            icon="ui-icon-check"/>
+            <p:ajaxExceptionHandler type="by.isida.service.exception.LinkServiceException"
+                                    update="exceptionDialog"
+                                    onexception="PF('exceptionDialog').show();" />
+
+            <p:dialog style="height: 200px" id="exceptionDialog"  widgetVar="exceptionDialog" height="200px">
+                    <h:outputText value="#{pfExceptionHandler.message}"/> <br/>
+            </p:dialog>
+
             <span id="rightbutton">
-                <p:commandButton value="Очистить" styleClass="ui-button-danger" update=":data:display" action="#{linkService.clear()}"
-                                                    icon="ui-icon-check"/>
+                <p:commandButton value="Очистить" styleClass="ui-button-danger" update=":data:display"
+                                 action="#{linkService.clear()}"
+                                 icon="ui-icon-check"/>
             </span>
         </div>
 
     </h:form>
     <br/>
     <h:form id="data">
-    <p:dataTable id="display" var="link" value="#{linkService.links}" rowIndexVar="index">
-        <p:column style="width:120px;" headerText="№ п/п">
-            <h:outputText value="#{index + 1}"/>
-        </p:column>
+        <p:dataTable id="display" var="link" value="#{linkService.links}" rowIndexVar="index">
+            <p:column style="width:120px;" headerText="№ п/п">
+                <h:outputText value="#{index + 1}"/>
+            </p:column>
 
-        <p:column headerText="Имя ссылки">
-            <h:outputText value="#{link.name}"/>
-        </p:column>
+            <p:column headerText="Имя ссылки">
+                <h:outputText value="#{link.name}"/>
+            </p:column>
 
-        <p:column headerText="Адрес ссылки">
-            <p:commandLink action="#{linkService.update(link.href)}" update=":form:panel">
-                <h:outputText value="#{link.href}"/>
-            </p:commandLink>
-        </p:column>
-    </p:dataTable>
+            <p:column headerText="Адрес ссылки">
+                <p:commandLink action="#{linkService.update(link.href)}" update=":form:panel">
+                    <h:outputText value="#{link.href}"/>
+                </p:commandLink>
+            </p:column>
+        </p:dataTable>
     </h:form>
 </h:body>
 </html>
