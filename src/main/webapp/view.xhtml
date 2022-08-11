@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"  xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Анализ количества ссылок</title>
+</h:head>
+<h:body>
+    <h2>Анализируемая страница</h2>
+    <h:form>
+
+        <h:outputLabel for="name" value="Name:" style="font-weight:bold"/>
+        <p:inputText id="name" value="#{linkService.linkHref}"/>
+
+        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
+
+        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+            <div class="text-center">
+                <i class="pi pi-spin pi-spinner loading-icon" aria-hidden="true"> </i>
+                Идет обработка....
+            </div>
+        </p:dialog>
+
+
+        <p:commandButton value="Анализировать" update="display" action="#{linkService.analyze()}" icon="ui-icon-check"/>
+    </h:form>
+    <h:form>
+        <p:commandButton value="Очистить"  update="display" action="#{linkService.clear()}" icon="ui-icon-check"/>
+    </h:form>
+    <br/>
+    <p:dataTable id="display" var="link" value="#{linkService.links}">
+        <p:column headerText="Имя ссылки">
+            <h:outputText value="#{link.name}"/>
+        </p:column>
+
+        <p:column headerText="Адрес ссылки">
+            <h:outputText value="#{link.href}"/>
+        </p:column>
+
+    </p:dataTable>
+</h:body>
+</html>
