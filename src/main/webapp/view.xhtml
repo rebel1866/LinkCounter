@@ -12,7 +12,7 @@
         <div class="input">
             <h:outputLabel for="link" value="URL: " style="font-weight:bold"/>
             <h:panelGroup id="panel">
-                <p:inputText styleClass="inputText" id="link" value="#{linkService.linkHref}"/>
+                <p:inputText styleClass="inputText" id="link" value="#{linkController.linkHref}"/>
             </h:panelGroup>
         </div>
         <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
@@ -27,9 +27,9 @@
         </p:dialog>
 
         <div id="buttons"><p:commandButton value="Анализировать" update=":data:display"
-                                           action="#{linkService.analyze()}"
+                                           action="#{linkController.analyze()}"
                                            icon="ui-icon-check"/>
-            <p:ajaxExceptionHandler type="by.isida.service.exception.LinkServiceException"
+            <p:ajaxExceptionHandler type="by.isida.controller.exception.LinkControllerException"
                                     update="exceptionDialog"
                                     onexception="PF('exceptionDialog').show();" />
 
@@ -39,7 +39,7 @@
 
             <span id="rightbutton">
                 <p:commandButton value="Очистить" styleClass="ui-button-danger" update=":data:display"
-                                 action="#{linkService.clear()}"
+                                 action="#{linkController.clear()}"
                                  icon="ui-icon-check"/>
             </span>
         </div>
@@ -47,7 +47,7 @@
     </h:form>
     <br/>
     <h:form id="data">
-        <p:dataTable id="display" var="link" value="#{linkService.links}" rowIndexVar="index">
+        <p:dataTable id="display" var="link" value="#{linkController.links}" rowIndexVar="index">
             <p:column style="width:120px;" headerText="№ п/п">
                 <h:outputText value="#{index + 1}"/>
             </p:column>
@@ -57,7 +57,7 @@
             </p:column>
 
             <p:column headerText="Адрес ссылки">
-                <p:commandLink action="#{linkService.update(link.href)}" update=":form:panel">
+                <p:commandLink action="#{linkController.update(link.href)}" update=":form:panel">
                     <h:outputText value="#{link.href}"/>
                 </p:commandLink>
             </p:column>

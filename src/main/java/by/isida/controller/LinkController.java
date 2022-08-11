@@ -1,7 +1,7 @@
-package by.isida.service;
+package by.isida.controller;
 
 import by.isida.model.Link;
-import by.isida.service.exception.LinkServiceException;
+import by.isida.controller.exception.LinkControllerException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,24 +27,25 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode
 @ToString
-public class LinkService implements Serializable {
+public class LinkController implements Serializable {
     @Serial
     private static final long serialVersionUID = 14965485415455485L;
     private String linkHref;
     private List<Link> links = new ArrayList<>();
 
-    public List<Link> analyze() throws LinkServiceException {
+    public void analyze() throws LinkControllerException {
         if (links.size() > 0) {
             links.clear();
         }
+//        String normalizedLink = normalizeLink();
         Document document;
         try {
             document = Jsoup.connect(linkHref).get();
         } catch (IOException | IllegalArgumentException e) {
-            Logger logger = LogManager.getLogger(LinkService.class);
+            Logger logger = LogManager.getLogger(LinkController.class);
             String errorMessage = String.format("Невозможно подключиться к указанному URL-адресу: %s", linkHref);
             logger.error(errorMessage);
-            throw new LinkServiceException(errorMessage);
+            throw new LinkControllerException(errorMessage);
         }
         Elements elements = document.getElementsByTag("a");
         for (Element linkElement : elements) {
@@ -54,8 +55,14 @@ public class LinkService implements Serializable {
                 links.add(new Link(linkName, linkHref));
             }
         }
-        return links;
     }
+
+    //   private String normalizeLink() {
+//        if (!linkHref.startsWith("http://") || !linkHref.startsWith("https://")) {
+//            return "http://" + linkHref;
+//        }
+//        return linkHref + "";
+    // }
 
     public void clear() {
         links.clear();
