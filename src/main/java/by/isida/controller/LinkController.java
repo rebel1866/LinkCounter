@@ -50,7 +50,7 @@ public class LinkController implements Serializable {
         fillLinkList(document, links);
     }
 
-    public void clear() {
+    public void clearLinks() {
         links.clear();
     }
 
