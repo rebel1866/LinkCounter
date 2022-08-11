@@ -34,13 +34,14 @@
     </h:form>
     <br/>
     <p:dataTable id="display" var="link" value="#{linkService.links}" rowIndexVar="index">
-        <p:column headerText="№ п/п">
+        <p:column style="width:120px;" headerText="№ п/п">
             <h:outputText value="#{index + 1}"/>
         </p:column>
 
         <p:column headerText="Имя ссылки">
             <h:outputText value="#{link.name}"/>
         </p:column>
+
         <p:column headerText="Адрес ссылки">
             <h:outputText value="#{link.href}"/>
         </p:column>

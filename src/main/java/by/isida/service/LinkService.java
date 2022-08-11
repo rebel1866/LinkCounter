@@ -31,18 +31,24 @@ public class LinkService {
             document = Jsoup.connect(linkHref).get();
         } catch (IOException e) {
             Logger logger = LogManager.getLogger(LinkService.class);
-            logger.error("Can not connect to service with given url");
+            logger.error("Can not connect to given url");
         }
         Elements elements = document.getElementsByTag("a");
         for (Element linkElement : elements) {
             String linkHref = linkElement.attr("href");
             String linkName = linkElement.text();
-            links.add(new Link(linkName, linkHref));
+            if (isValidLink(linkHref, linkName)) {
+                links.add(new Link(linkName, linkHref));
+            }
         }
         return links;
     }
 
     public void clear() {
         links.clear();
+    }
+
+    private boolean isValidLink(String linkHref, String linkName) {
+        return linkHref.startsWith("http") && !linkName.equals("");
     }
 }
