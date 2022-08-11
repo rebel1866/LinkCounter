@@ -8,31 +8,34 @@
 </h:head>
 <h:body>
     <h2 id="header">Анализируемая страница</h2>
-    <h:form>
+    <h:form id="form">
         <div class="input">
-            <h:outputLabel for="name" value="URL: " style="font-weight:bold"/>
-            <p:inputText styleClass="inputText" id="name" value="#{linkService.linkHref}"/>
+            <h:outputLabel for="link" value="URL: " style="font-weight:bold"/>
+            <h:panelGroup id="panel">
+                <p:inputText styleClass="inputText" id="link" value="#{linkService.linkHref}"/>
+            </h:panelGroup>
         </div>
         <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
 
         <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false"
                   showHeader="false">
             <div class="text-center">
-                <i class="pi pi-spin pi-spinner loading-icon" aria-hidden="true"> </i>
+                <i class="pi pi-spin pi-spinner loading-icon"> </i>
                 <h:outputText value="Идет обработка...."/>
             </div>
         </p:dialog>
 
-        <div id="buttons"><p:commandButton value="Анализировать" update="display" action="#{linkService.analyze()}"
+        <div id="buttons"><p:commandButton value="Анализировать" update=":data:display" action="#{linkService.analyze()}"
                                            icon="ui-icon-check"/>
             <span id="rightbutton">
-                <p:commandButton value="Очистить" styleClass="ui-button-danger" update="display" action="#{linkService.clear()}"
+                <p:commandButton value="Очистить" styleClass="ui-button-danger" update=":data:display" action="#{linkService.clear()}"
                                                     icon="ui-icon-check"/>
             </span>
         </div>
 
     </h:form>
     <br/>
+    <h:form id="data">
     <p:dataTable id="display" var="link" value="#{linkService.links}" rowIndexVar="index">
         <p:column style="width:120px;" headerText="№ п/п">
             <h:outputText value="#{index + 1}"/>
@@ -43,8 +46,11 @@
         </p:column>
 
         <p:column headerText="Адрес ссылки">
-            <h:outputText value="#{link.href}"/>
+            <p:commandLink action="#{linkService.update(link.href)}" update=":form:panel">
+                <h:outputText value="#{link.href}"/>
+            </p:commandLink>
         </p:column>
     </p:dataTable>
+    </h:form>
 </h:body>
 </html>

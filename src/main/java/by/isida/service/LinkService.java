@@ -1,8 +1,10 @@
 package by.isida.service;
 
 import by.isida.model.Link;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -11,14 +13,22 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import java.io.IOException;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @ManagedBean
+@SessionScoped
 @Getter
 @Setter
-public class LinkService {
+@EqualsAndHashCode
+@ToString
+public class LinkService implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 14965485415455485L;
     private String linkHref;
     private List<Link> links = new ArrayList<>();
 
@@ -46,6 +56,10 @@ public class LinkService {
 
     public void clear() {
         links.clear();
+    }
+
+    public void update(String newHref) {
+        linkHref = newHref;
     }
 
     private boolean isValidLink(String linkHref, String linkName) {
