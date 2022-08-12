@@ -60,11 +60,7 @@ public class LinkController implements Serializable {
     public void clearLinks() {
         links.clear();
     }
-
-    public void updateHref(String newHref) {
-        inputLink.setInputURL(newHref);
-    }
-
+    
     private void fillLinkList(Document document, List<Link> links) {
         Elements elements = document.getElementsByTag("a");
         for (Element linkElement : elements) {
