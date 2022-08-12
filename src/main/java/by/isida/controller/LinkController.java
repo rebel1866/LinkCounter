@@ -38,7 +38,9 @@ public class LinkController implements Serializable {
     private List<Link> links = new ArrayList<>();
     private static final String URL_START_SYMBOLS = "http";
 
-
+    /* Метод выполняет анализ указанного пользователем ресурса - производится поиск ссылок. Найденные ссылки помещаются
+    в ArrayList links. В случае, когда соединение с ресурсом невозможно, выбрасывается исключение, информация о котором
+    впоследствии будет отображена на странице */
     public void analyze() throws LinkControllerException {
         if (links.size() > 0) {
             links.clear();
@@ -57,10 +59,13 @@ public class LinkController implements Serializable {
         fillLinkList(document, links);
     }
 
+    // Метод выполнятся при нажатии кнопки Очистить
     public void clearLinks() {
         links.clear();
     }
-    
+
+    /* Вспомогательный метод. Извлекает ссылки, создает объекты Link, заполняет ими ArrayList links. Вызывается внутри
+    метода analyze() */
     private void fillLinkList(Document document, List<Link> links) {
         Elements elements = document.getElementsByTag("a");
         for (Element linkElement : elements) {
@@ -73,6 +78,8 @@ public class LinkController implements Serializable {
         }
     }
 
+    /* Приводит ссылку к установленному образцу. Если в начале ссылки отсуствует указание протокола передачи данных
+       (http:// или https://) - в таком случае метод присоединяет соответсвующее имя протокола */
     private void normalizeLink() {
         String linkHref = inputLink.getInputURL();
         if (!linkHref.startsWith(URL_START_SYMBOLS)) {
@@ -80,6 +87,7 @@ public class LinkController implements Serializable {
         }
     }
 
+    // Проверяет валидность ссылки - ссылка не должна быть относительной, а ее имя не должно быть пустым.
     private boolean isValidLink(String linkHref, String linkName) {
         return linkHref.startsWith(URL_START_SYMBOLS) && !linkName.equals("");
     }

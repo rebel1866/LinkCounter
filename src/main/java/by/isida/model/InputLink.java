@@ -16,6 +16,7 @@ import java.io.Serializable;
 @Setter
 @EqualsAndHashCode
 @ToString
+//Объект данного класса содержит url-адрес анализируемого ресурса (вводится пользователем)
 public class InputLink implements Serializable {
     @Serial
     private static final long serialVersionUID = 2111485415455423L;

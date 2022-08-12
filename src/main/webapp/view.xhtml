@@ -8,6 +8,7 @@
 </h:head>
 <h:body>
     <h2 id="header">Анализируемая страница</h2>
+    <!-- Поле ввода ссылки на анализируемый ресурс   -->
     <h:form id="form">
         <div class="input">
             <h:outputLabel for="link" value="URL: " style="font-weight:bold"/>
@@ -15,9 +16,10 @@
                 <p:inputText styleClass="inputText" id="link" value="#{inputLink.inputURL}"/>
             </h:panelGroup>
         </div>
+        <!-- Кнопки Анализировать и Очистить  -->
         <div id="buttons">
             <p:commandButton value="Анализировать" update=":data:display" action="#{linkController.analyze()}"
-                                           icon="ui-icon-check"/>
+                             icon="ui-icon-check"/>
             <span id="rightbutton">
                 <p:commandButton value="Очистить" styleClass="ui-button-danger" update=":data:display"
                                  action="#{linkController.clearLinks()}" icon="ui-icon-check"/>
@@ -25,6 +27,7 @@
         </div>
     </h:form>
     <br/>
+    <!-- Таблица вывода найденных ссылок   -->
     <h:form id="data">
         <p:dataTable id="display" var="link" value="#{linkController.links}" rowIndexVar="index">
             <p:column style="width:120px;" headerText="№ п/п">
@@ -42,7 +45,7 @@
             </p:column>
         </p:dataTable>
     </h:form>
-
+    <!-- Компонент waiting box   -->
     <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
 
     <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false"
@@ -53,11 +56,11 @@
             </div>
         </div>
     </p:dialog>
-
+    <!-- Обработка ошибок ввода url-адреса  -->
     <p:ajaxExceptionHandler type="by.isida.controller.exception.LinkControllerException" update="exceptionDialog"
-                            onexception="PF('exceptionDialog').show();" />
+                            onexception="PF('exceptionDialog').show();"/>
 
-    <p:dialog style="height: 200px" id="exceptionDialog"  widgetVar="exceptionDialog" height="200px">
+    <p:dialog style="height: 200px" id="exceptionDialog" widgetVar="exceptionDialog" height="200px">
         <h:outputText value="#{pfExceptionHandler.message}"/> <br/>
     </p:dialog>
 
