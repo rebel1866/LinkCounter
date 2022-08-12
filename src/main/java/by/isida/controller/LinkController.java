@@ -1,5 +1,6 @@
 package by.isida.controller;
 
+import by.isida.model.InputLink;
 import by.isida.model.Link;
 import by.isida.controller.exception.LinkControllerException;
 import lombok.EqualsAndHashCode;
@@ -14,6 +15,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import java.io.IOException;
 import java.io.Serial;
@@ -30,8 +32,12 @@ import java.util.List;
 public class LinkController implements Serializable {
     @Serial
     private static final long serialVersionUID = 14965485415455485L;
-    private String linkHref;
+
+    @ManagedProperty(value = "#{inputLink}")
+    private InputLink inputLink;
     private List<Link> links = new ArrayList<>();
+    private static final String URL_START_SYMBOLS = "http";
+
 
     public void analyze() throws LinkControllerException {
         if (links.size() > 0) {
@@ -39,11 +45,12 @@ public class LinkController implements Serializable {
         }
         normalizeLink();
         Document document;
+        String linkHref = inputLink.getInputURL();
         try {
             document = Jsoup.connect(linkHref).get();
         } catch (IOException | IllegalArgumentException e) {
             Logger logger = LogManager.getLogger(LinkController.class);
-            String errorMessage = String.format("Невозможно подключиться по указанному URL-адресу: %s", linkHref);
+            String errorMessage = String.format("Невозможно подключиться к указанному URL-адресу: %s", linkHref);
             logger.error(errorMessage);
             throw new LinkControllerException(errorMessage);
         }
@@ -55,7 +62,7 @@ public class LinkController implements Serializable {
     }
 
     public void updateHref(String newHref) {
-        linkHref = newHref;
+        inputLink.setInputURL(newHref);
     }
 
     private void fillLinkList(Document document, List<Link> links) {
@@ -64,18 +71,20 @@ public class LinkController implements Serializable {
             String linkHref = linkElement.attr("href");
             String linkName = linkElement.text();
             if (isValidLink(linkHref, linkName)) {
-                links.add(new Link(linkName, linkHref));
+                Link link = new Link(linkName, linkHref);
+                links.add(link);
             }
         }
     }
 
     private void normalizeLink() {
-        if (!linkHref.startsWith("http")) {
-            linkHref = "http://" + linkHref;
+        String linkHref = inputLink.getInputURL();
+        if (!linkHref.startsWith(URL_START_SYMBOLS)) {
+            inputLink.setInputURL("http://" + linkHref);
         }
     }
 
     private boolean isValidLink(String linkHref, String linkName) {
-        return linkHref.startsWith("http") && !linkName.equals("");
+        return linkHref.startsWith(URL_START_SYMBOLS) && !linkName.equals("");
     }
 }

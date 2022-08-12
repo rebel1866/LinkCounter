@@ -12,7 +12,7 @@
         <div class="input">
             <h:outputLabel for="link" value="URL: " style="font-weight:bold"/>
             <h:panelGroup id="panel">
-                <p:inputText styleClass="inputText" id="link" value="#{linkController.linkHref}"/>
+                <p:inputText styleClass="inputText" id="link" value="#{inputLink.inputURL}"/>
             </h:panelGroup>
         </div>
         <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
