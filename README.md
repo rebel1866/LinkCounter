@@ -17,3 +17,12 @@ http://localhost:8080/links)<br>
 
 5) Программа тестирована в браузерах на ОС Linux Ubuntu 22.04
 
+
+
+
+Docker:
+
+docker build -t linksimage .
+docker run -it --name linkscontainer -p 8881:8080 <imageid>
+
+localhost:8881/links
